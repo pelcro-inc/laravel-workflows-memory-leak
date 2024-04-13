@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 class VerifyEmail extends Activity
 {
     public $connection = 'redis-queue-default';
-    public $queue = 'default';
+    public $queue = 'workflows';
 
     /**
      * @throws \Exception
@@ -17,7 +17,7 @@ class VerifyEmail extends Activity
     {
         $customer->fill(['email_verified_at' => now()])->save();
 
-        Log::debug(sprintf(
+        Log::channel('workflows')->debug(sprintf(
             '[%d] [%d] -> %s',
             getmypid(),
             (memory_get_usage(true) / 1024 / 1024),

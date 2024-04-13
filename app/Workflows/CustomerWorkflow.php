@@ -35,7 +35,7 @@ class CustomerWorkflow extends Workflow
             throw $throwable;
         }
 
-        Log::debug(sprintf(
+        Log::channel('workflows')->debug(sprintf(
             '[%d] [%d] -> %s',
             getmypid(),
             (memory_get_usage(true) / 1024 / 1024),
