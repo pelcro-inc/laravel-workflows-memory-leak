@@ -3,15 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
-use Ramsey\Uuid\Uuid;
-use JetBrains\PhpStorm\NoReturn;
-use Spatie\LaravelIgnition\Support\LaravelVersion;
 use Workflow\WorkflowStub;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Workflows\CustomerWorkflow;
-use function Psy\debug;
 
 class TestWorkflows extends Command
 {
@@ -32,9 +27,9 @@ class TestWorkflows extends Command
     /**
      * Execute the console command.
      */
-    #[NoReturn] public function handle(): void
+    public function handle(): void
     {
-        User::factory()->count(5000)->create([
+        User::factory()->count(1000)->create([
             'email_verified_at' => null,
         ]);
 
@@ -51,9 +46,6 @@ class TestWorkflows extends Command
             $this->info("[{$workflow->id()}] Triggered workflow for Customer ID {$customer->id}");
 
         });
-
-        $message = '[' . (memory_get_usage(true) / 1024 / 1024) . ' MB' . '] ' .  get_class($this);
-        Log::debug($message);
 
         exit(0);
 
