@@ -6,15 +6,20 @@ use App\Models\User;
 use Ramsey\Uuid\Uuid;
 use Workflow\Activity;
 use Illuminate\Support\Facades\Log;
+
 class GenerateStrongPassword extends Activity
 {
     public $connection = 'redis-queue-default';
     public $queue = 'workflows';
 
     /**
-     * @throws \Exception
+     * Execute activity.
+     *
+     * @param User $customer
+     * @return User
+     * @throws \Throwable
      */
-    public function execute(User $customer)
+    public function execute(User $customer): User
     {
         $bytes = random_bytes(16);
 
@@ -28,5 +33,7 @@ class GenerateStrongPassword extends Activity
             (memory_get_usage(true) / 1024 / 1024),
             get_class($this),
         ));
+
+        return $customer;
     }
 }

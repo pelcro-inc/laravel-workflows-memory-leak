@@ -9,6 +9,7 @@ use Illuminate\Bus\Batch;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 use App\Jobs\GenerateStrongPassword;
 
 class TestJobs extends Command
@@ -32,7 +33,9 @@ class TestJobs extends Command
      */
     public function handle(): void
     {
-        User::factory()->count(1000)->create([
+        $count = 1000;
+
+        User::factory()->count($count)->create([
             'email_verified_at' => null,
         ]);
 
@@ -51,26 +54,19 @@ class TestJobs extends Command
         });
 
         $batch = Bus::batch($jobs)->then(static function (Batch $batch) {
-            //
+            Log::channel('jobs')->debug(sprintf(
+                '[%d] [%d] -> %s',
+                getmypid(),
+                (memory_get_usage(true) / 1024 / 1024),
+                'Batch completed',
+            ));
         })->catch(static function (Batch $batch, \Throwable $e) {
-            //
+            // do nothing.
         })->finally(static function (Batch $batch) {
-            //
-        })->name(Uuid::uuid7()->toString())->onConnection('redis-queue-default')->onQueue('batches')->dispatch();
+            // do nothing.
+        })->name(Uuid::uuid7()->toString())->onConnection('redis-queue-default')->onQueue('jobs')->dispatch();
 
-        $this->info('Total jobs: ' . $batch->totalJobs);
-        $this->info('');
-
-        /*
-            $progress = $this->output->createProgressBar(100);
-
-            while (($batch = $batch->fresh()) && !$batch->finished()) {
-                $progress->setProgress($batch->progress());
-                sleep(1);
-            }
-
-            $progress->finish();
-        */
+        $this->info("Dispatched {$count} chained jobs in batch (total of {$batch->totalJobs} jobs)");
 
         exit(0);
 

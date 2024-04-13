@@ -29,7 +29,9 @@ class TestWorkflows extends Command
      */
     public function handle(): void
     {
-        User::factory()->count(1000)->create([
+        $count = 1000;
+
+        User::factory()->count($count)->create([
             'email_verified_at' => null,
         ]);
 
@@ -43,9 +45,11 @@ class TestWorkflows extends Command
             $workflow = WorkflowStub::make(CustomerWorkflow::class);
             $workflow->start($customer->id);
 
-            $this->info("[{$workflow->id()}] Triggered workflow for Customer ID {$customer->id}");
+            $this->line("[{$workflow->id()}] Triggered workflow for Customer ID {$customer->id}");
 
         });
+
+        $this->info("Dispatched {$count} workflows");
 
         exit(0);
 
