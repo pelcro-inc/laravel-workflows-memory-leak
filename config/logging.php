@@ -57,6 +57,18 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'workflows' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/workflows.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
+        'jobs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/jobs.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
