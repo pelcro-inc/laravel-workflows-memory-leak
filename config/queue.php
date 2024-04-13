@@ -71,6 +71,19 @@ return [
             'after_commit' => false,
         ],
 
+        'redis-queue-default' => [
+            'driver' => 'redis',
+            'connection' => 'redis-queue-default',
+            'queue' => 'default',
+            'retry_after' => 43210,
+            'expire' => 43200,
+            'block_for' => null,
+            'after_commit' => false,
+            'queues' => [
+                'default',
+            ],
+        ],
+
     ],
 
     /*

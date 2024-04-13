@@ -121,7 +121,7 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'phpredis'),
+        'client' => 'phpredis',
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
@@ -145,6 +145,14 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
+
+        'redis-queue-default' => array_filter([
+            'scheme' => env('REDIS_SCHEME', 'tcp'),
+            'host' => env('REDIS_QUEUES_HOST', env('REDIS_HOST', '127.0.0.1')),
+            'password' => env('REDIS_QUEUES_PASSWORD', env('REDIS_PASSWORD')),
+            'port' => env('REDIS_QUEUES_PORT', env('REDIS_PORT', 6379)),
+            'database' => 2,
+        ]),
 
     ],
 
